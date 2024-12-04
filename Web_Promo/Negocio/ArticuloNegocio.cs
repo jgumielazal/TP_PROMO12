@@ -128,8 +128,8 @@ namespace negocio
                     
                     articulo.Precio = Convert.ToDecimal(datos.Lector["Precio"]);
 
-                    ImagenNegocio negocioImg= new ImagenNegocio();
-                    articulo.Imagenes = negocioImg.listarPorId(articulo.IDArticulo);
+                    //ImagenNegocio negocioImg= new ImagenNegocio();
+                    //articulo.Imagenes = negocioImg.listarPorId(articulo.IDArticulo);
 
 
                     lista.Add(articulo);

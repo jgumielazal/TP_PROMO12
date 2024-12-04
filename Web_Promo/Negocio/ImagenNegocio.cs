@@ -10,26 +10,26 @@ namespace negocio
 {
     public class ImagenNegocio
     {
-        public List<Imagen> listarPorId(int id)
+        public List<string> listarPorId(int id)
         {
 
-            List<Imagen> lista = new List<Imagen>();
+            List<string> lista = new List<string>();
             AccesoDatos accesoDatos = new AccesoDatos();
 
             try
             {
-                accesoDatos.setearConsulta("select i.Id,i.IdArticulo,i.ImagenUrl from IMAGENES as i inner join ARTICULOS as a on i.IdArticulo=a.Id where a.id =@idArticulo");
-                accesoDatos.setearParametro("@IdArticulo", id);
+                accesoDatos.setearConsulta("SELECT Id, IdArticulo, ImagenUrl FROM IMAGENES WHERE IdArticulo = @id");
+                accesoDatos.setearParametro("@id", id);
                 accesoDatos.ejecutarConsulta();
 
-                while (accesoDatos.Lector.Read())
+                while (accesoDatos.Lector.Read())// lee cada URL y la guarda en la lista
                 {
                     Imagen imagen = new Imagen();
                     imagen.IDImagen = (int)accesoDatos.Lector["Id"];
                     imagen.IDArticulo = (int)accesoDatos.Lector["IdArticulo"];
                     imagen.ImagenUrl = (string)accesoDatos.Lector["ImagenUrl"];
 
-                    lista.Add(imagen);
+                    lista.Add((string)accesoDatos.Lector["ImagenUrl"]);
                 }
 
                 return lista;
@@ -42,6 +42,17 @@ namespace negocio
             {
                 accesoDatos.cerrarConexion();
             }
+        }
+
+        public string obtenerSiguienteImagen(int idArticulo, string urlActual)
+        {
+            List<string> urls = listarPorId(idArticulo);// me trae todas las urls
+            int posicionActual = urls.IndexOf(urlActual);// Busca cuál está mostrando
+
+            if (posicionActual == urls.Count - 1)
+                return urls[0];//volver al principio
+            else
+                return urls[posicionActual + 1];
         }
 
 
